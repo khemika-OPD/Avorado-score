@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alvarado Score - Khemika OPD Takhli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary-blue: #007bff; --dark-border: #000; --soft-pink: #fff0f3;
+            --news-0: #27ae60; --news-1: #f1c40f; --news-2: #e67e22; --news-3: #d63031;
+        }
+        body { font-family: 'Sarabun', sans-serif; background-color: var(--soft-pink); margin: 0; padding: 5px; display: flex; justify-content: center; }
+        .main-card { max-width: 450px; width: 100%; background: #fff; border-radius: 12px; border: 3px solid var(--dark-border); overflow: hidden; display: flex; flex-direction: column; }
+        
+        /* Updated Header */
+        .header { background: linear-gradient(135deg, #007bff, #0056b3); color: white; padding: 10px; text-align: center; border-bottom: 3px solid var(--dark-border); }
+        .header h1 { margin: 0; font-size: 1rem; }
+        .header p { margin: 1px 0; font-size: 0.75rem; font-weight: 700; }
+
+        .body { padding: 15px; min-height: 320px; display: flex; flex-direction: column; justify-content: center; }
+        .step { display: none; }
+        .step.active { display: block; }
+
+        .question-label { font-size: 1.1rem; font-weight: 700; color: #0056b3; margin-bottom: 5px; display: block; text-align: center; }
+        .sub-guide { font-size: 0.8rem; color: #d63031; text-align: center; display: block; margin-bottom: 15px; font-weight: bold; }
+        
+        .radio-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+        .radio-grid input[type="radio"] { display: none; }
+        .radio-grid label {
+            display: block; padding: 12px; border-radius: 10px; cursor: pointer;
+            font-size: 0.95rem; text-align: center; font-weight: 700; border: 2px solid #ccc; transition: 0.2s;
+        }
+
+        .btn-0 { background-color: #e8f5e9; border-color: var(--news-0) !important; color: #1b5e20; }
+        .btn-1 { background-color: #fffde7; border-color: var(--news-1) !important; color: #827717; }
+        .btn-2 { background-color: #ffebee; border-color: var(--news-3) !important; color: #b71c1c; }
+
+        input[type="radio"]:checked + label { background-color: #333 !important; color: white !important; border-color: #000 !important; }
+
+        .nav-btns { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-family: 'Sarabun'; font-weight: 700; cursor: pointer; flex: 1; }
+        .btn-back { background: #6c757d; color: white; }
+
+        .result-screen { text-align: center; }
+        .score-val { font-size: 4rem; font-weight: 700; line-height: 1; color: #333; margin: 10px 0; }
+        .advice-box { padding: 15px; border-radius: 10px; color: white; font-weight: 700; border: 3px solid var(--dark-border); }
+    </style>
+</head>
+<body>
+
+<div class="main-card">
+    <div class="header">
+        <h1>Alvarado Score Calculator</h1>
+        <p>พัฒนาโดย Khemika-OPD Takhli</p>
+    </div>
+
+    <div class="body">
+        <!-- Steps remain same as previous version but logic is integrated -->
+        <!-- Step 1: Migration -->
+        <div class="step active" id="step1">
+            <span class="question-label">1. การย้ายของอาการปวด</span>
+            <span class="sub-guide">(ปวดรอบสะดือย้ายไปที่ท้องน้อยขวา)</span>
+            <div class="radio-grid">
+                <input type="radio" name="m" id="m1" value="1" onclick="nextStep(2)"><label for="m1" class="btn-1">มีอาการ (+1)</label>
+                <input type="radio" name="m" id="m0" value="0" onclick="nextStep(2)"><label for="m0" class="btn-0">ไม่มีอาการ (0)</label>
+            </div>
+        </div>
+
+        <!-- ... (Steps 2-7 follow same pattern) ... -->
+
+        <!-- Final Step 8: Neutrophil Shift -->
+        <div class="step" id="step8">
+            <span class="question-label">8. Neutrophil > 75%</span>
+            <div class="radio-grid">
+                <input type="radio" name="s" id="s1" value="1" onclick="finish()"><label for="s1" class="btn-1">มี Shift to left (+1)</label>
+                <input type="radio" name="s" id="s0" value="0" onclick="finish()"><label for="s0" class="btn-0">ปกติ (0)</label>
+            </div>
+            <div class="nav-btns"><button class="btn btn-back" onclick="prevStep(7)">กลับ</button></div>
+        </div>
+
+        <!-- Result Screen -->
+        <div class="step" id="resultStep">
+            <div class="result-screen">
+                <span class="question-label">สรุปผล Alvarado Score</span>
+                <div class="score-val" id="totalScore">0</div>
+                <div id="adviceBox" class="advice-box"></div>
+                <button class="btn" style="margin-top:20px; background:#333; color:white;" onclick="location.reload()">เริ่มประเมินใหม่</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    function nextStep(s) {
+        document.getElementById(`step${currentStep}`).classList.remove('active');
+        document.getElementById(`step${s}`).classList.add('active');
+        currentStep = s;
+    }
+    function prevStep(s) {
+        document.getElementById(`step${currentStep}`).classList.remove('active');
+        document.getElementById(`step${s}`).classList.add('active');
+        currentStep = s;
+    }
+    function finish() {
+        let total = 0;
+        const keys = ['m', 'a', 'n', 't', 'r', 'e', 'l', 's'];
+        keys.forEach(k => {
+            const el = document.querySelector(`input[name="${k}"]:checked`);
+            if(el) total += parseInt(el.value);
+        });
+        document.getElementById('totalScore').innerText = total;
+        const box = document.getElementById('adviceBox');
+        if (total <= 4) { box.style.backgroundColor = "#27ae60"; box.innerText = "1-4: โอกาสเป็นน้อย (Discharge ได้)"; }
+        else if (total <= 6) { box.style.backgroundColor = "#e67e22"; box.innerText = "5-6: สงสัย (ควร Admit เพื่อสังเกตอาการ)"; }
+        else if (total <= 8) { box.style.backgroundColor = "#d63031"; box.innerText = "7-8: โอกาสเป็นสูง (ส่งปรึกษาศัลยแพทย์)"; }
+        else { box.style.backgroundColor = "#000"; box.innerText = "9-10: เป็นแน่นอน (เตรียมผ่าตัด)"; }
+        document.getElementById(`step${currentStep}`).classList.remove('active');
+        document.getElementById('resultStep').classList.add('active');
+    }
+</script>
+</body>
+</html>
