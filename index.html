@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alvarado Score Calculator - รพ.ตาคลี</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&family=Kanit:wght@500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@master/qrcode.min.js"></script>
     <style>
         body { font-family: 'Sarabun', sans-serif; background-color: #f0f4f8; margin: 0; padding: 15px; display: flex; justify-content: center; }
         .wrapper { max-width: 580px; width: 100%; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(13, 148, 136, 0.1); }
@@ -15,15 +14,15 @@
         .section-title { font-family: 'Kanit', sans-serif; font-size: 16px; color: #1e293b; background: #f8fafc; padding: 8px 14px; border-left: 4px solid #0d9488; margin: 20px 0 10px 0; border-radius: 0 6px 6px 0; }
         .checkbox-group { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid #f1f5f9; cursor: pointer; border-radius: 8px; transition: background 0.2s; }
         .checkbox-group:hover { background: #f0fdfa; }
-        .label-text { display: flex; justify-content: space-between; width: 100%; font-size: 15px; color: #334155; cursor: pointer; padding-right: 15px; }
+        .label-text { display: flex; justify-content: space-between; width: 100%; font-size: 15px; color: #334155; cursor: pointer; padding-right: 15px; line-height: 1.4; }
         .score-badge { background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: bold; margin-left: 10px; white-space: nowrap; }
-        .checkbox-group input { width: 20px; height: 20px; accent-color: #0d9488; cursor: pointer; }
+        .checkbox-group input { width: 22px; height: 22px; accent-color: #0d9488; cursor: pointer; margin-left: 10px; flex-shrink: 0; }
         .result-box { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 16px; padding: 22px; text-align: center; margin-top: 30px; transition: all 0.3s ease; }
         .score-display { font-family: 'Kanit', sans-serif; font-size: 54px; color: #475569; font-weight: bold; margin: 5px 0; line-height: 1; }
         .interpretation { font-family: 'Kanit', sans-serif; font-weight: 600; font-size: 18px; margin-top: 10px; }
         .clinical-guide { font-size: 14px; color: #64748b; margin-top: 12px; line-height: 1.5; text-align: left; background: rgba(255,255,255,0.8); padding: 12px; border-radius: 8px; border-left: 4px solid #94a3b8; display: none; }
         .qr-zone { margin-top: 25px; padding: 15px; background: #f8fafc; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; border: 1px solid #e2e8f0; }
-        #qrcode { padding: 8px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; }
+        #qrcode { padding: 8px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; min-height: 120px; display: flex; align-items: center; justify-content: center; }
         .footer { text-align: center; margin-top: 25px; font-size: 12px; color: #94a3b8; }
     </style>
 </head>
@@ -31,4 +30,168 @@
 
 <div class="wrapper">
     <h1>📊 Alvarado Score Calculator</h1>
-    <p class="subtitle">ระบบประเมินและคัดกรองภาวะไส้ติ่งอักเสบเฉียบพลัน รพ.
+    <p class="subtitle">ระบบประเมินและคัดกรองภาวะไส้ติ่งอักเสบเฉียบพลัน รพ.ตาคลี</p>
+
+    <div class="section-title">🩺 อาการวิทยา (Symptoms)</div>
+    
+    <div class="checkbox-group">
+        <label class="label-text" for="sym1">
+            <span>• ปวดท้องย้ายตำแหน่ง (Migration) เริ่มที่สะดือแล้วย้ายไปท้องน้อยขวา</span>
+            <span class="score-badge">+1 คะแนน</span>
+        </label>
+        <input type="checkbox" id="sym1" value="1" onchange="calculateAlvarado()">
+    </div>
+    
+    <div class="checkbox-group">
+        <label class="label-text" for="sym2">
+            <span>• เบื่ออาหาร (Anorexia) รู้สึกไม่อยากอาหาร</span>
+            <span class="score-badge">+1 คะแนน</span>
+        </label>
+        <input type="checkbox" id="sym2" value="1" onchange="calculateAlvarado()">
+    </div>
+    
+    <div class="checkbox-group">
+        <label class="label-text" for="sym3">
+            <span>• คลื่นไส้ / อาเจียน (Nausea / Vomiting)</span>
+            <span class="score-badge">+1 คะแนน</span>
+        </label>
+        <input type="checkbox" id="sym3" value="1" onchange="calculateAlvarado()">
+    </div>
+
+    <div class="section-title">🔎 อาการแสดง (Signs)</div>
+    
+    <div class="checkbox-group" style="background: #fff7ed;">
+        <label class="label-text" for="sign1">
+            <span><strong>• กดเจ็บที่ท้องน้อยด้านขวา (Tenderness in RLQ)</strong></span>
+            <span class="score-badge" style="background: #fed7aa; color: #ea580c;">+2 คะแนน</span>
+        </label>
+        <input type="checkbox" id="sign1" value="2" onchange="calculateAlvarado()">
+    </div>
+    
+    <div class="checkbox-group">
+        <label class="label-text" for="sign2">
+            <span>• กดเจ็บแล้วปล่อยเจ็บ (Rebound tenderness) แสดงถึงเยื่อบุช่องท้องอักเสบ</span>
+            <span class="score-badge">+1 คะแนน</span>
+        </label>
+        <input type="checkbox" id="sign2" value="1" onchange="calculateAlvarado()">
+    </div>
+    
+    <div class="checkbox-group">
+        <label class="label-text" for="sign3">
+            <span>• มีไข้ (Elevated temperature) อุณหภูมิร่างกาย > 37.3 องศาเซลเซียส</span>
+            <span class="score-badge">+1 คะแนน</span>
+        </label>
+        <input type="checkbox" id="sign3" value="1" onchange="calculateAlvarado()">
+    </div>
+
+    <div class="section-title">🔬 ผลตรวจทางห้องปฏิบัติการ (Laboratory)</div>
+    
+    <div class="checkbox-group" style="background: #f0fdfa;">
+        <label class="label-text" for="lab1">
+            <span><strong>• เม็ดเลือดขาวสูง (Leukocytosis) WBC > 10,000 เซลล์/ลบ.มม.</strong></span>
+            <span class="score-badge" style="background: #99f6e4; color: #0d9488;">+2 คะแนน</span>
+        </label>
+        <input type="checkbox" id="lab1" value="2" onchange="calculateAlvarado()">
+    </div>
+    
+    <div class="checkbox-group">
+        <label class="label-text" for="lab2">
+            <span>• เม็ดเลือดขาวชนิดนิวโทรฟิลสูง (Shift to the left) มี Neutrophil > 75%</span>
+            <span class="score-badge">+1 คะแนน</span>
+        </label>
+        <input type="checkbox" id="lab2" value="1" onchange="calculateAlvarado()">
+    </div>
+
+    <div class="result-box" id="resultContainer">
+        <span style="font-size: 14px; color: #64748b; font-weight: 500;">ผลคะแนนรวมการคัดกรอง</span>
+        <div class="score-display" id="totalScore">0</div>
+        <div class="interpretation" id="interpretText" style="color: #64748b;">กรุณาเลือกอาการแสดงของผู้ป่วย</div>
+        <div class="clinical-guide" id="clinicalGuide"></div>
+    </div>
+
+    <div class="qr-zone">
+        <span style="font-size: 13px; color: #475569; font-weight: bold;">📱 สแกน QR Code เพื่อเปิดใช้งานบนสมาร์ทโฟน</span>
+        <div id="qrcode"></div>
+    </div>
+
+    <div class="footer">
+        OPD Digital Toolkit | พัฒนาเชิงนวัตกรรมโดย คุณเขมิกา พงษ์ศรี รพ.ตาคลี
+    </div>
+</div>
+
+<script>
+function calculateAlvarado() {
+    let score = 0;
+    
+    if(document.getElementById('sym1').checked) score += 1;
+    if(document.getElementById('sym2').checked) score += 1;
+    if(document.getElementById('sym3').checked) score += 1;
+    if(document.getElementById('sign1').checked) score += 2;
+    if(document.getElementById('sign2').checked) score += 1;
+    if(document.getElementById('sign3').checked) score += 1;
+    if(document.getElementById('lab1').checked) score += 2;
+    if(document.getElementById('lab2').checked) score += 1;
+
+    document.getElementById('totalScore').innerText = score;
+
+    let container = document.getElementById('resultContainer');
+    let text = document.getElementById('interpretText');
+    let guide = document.getElementById('clinicalGuide');
+    let scoreNum = document.getElementById('totalScore');
+
+    if (score === 0) {
+        text.innerText = "กรุณาเลือกอาการแสดงของผู้ป่วย";
+        text.style.color = "#64748b"; scoreNum.style.color = "#475569";
+        container.style.background = "#f8fafc"; container.style.borderColor = "#e2e8f0";
+        guide.style.display = "none"; return;
+    }
+    guide.style.display = "block";
+
+    if (score >= 1 && score <= 4) {
+        text.innerText = "🟢 โอกาสเป็นไส้ติ่งอักเสบ \"ต่ำ\" (Low probability)";
+        text.style.color = "#16a34a"; scoreNum.style.color = "#16a34a";
+        container.style.background = "#f0fdf4"; container.style.borderColor = "#bbf7d0"; guide.style.borderLeftColor = "#16a34a";
+        guide.innerHTML = "<strong>🎯 แนวทางการรักษาเบื้องต้น (Action):</strong><br>• มักพิจารณาการวินิจฉัยโรคอื่นที่เป็นไปได้แทน<br>• ให้สุขศึกษาแนะนำผู้ป่วยกลับบ้านสังเกตอาการ และรีบมา รพ. ทันทีเมื่อมีอาการปวดรุนแรงมากขึ้น";
+    } 
+    else if (score >= 5 && score <= 6) {
+        text.innerText = "🟡 โอกาสเป็นไส้ติ่งอักเสบ \"ปานกลาง\" (Compatible with appendicitis)";
+        text.style.color = "#d97706"; scoreNum.style.color = "#d97706";
+        container.style.background = "#fffbeb"; container.style.borderColor = "#fef3c7"; guide.style.borderLeftColor = "#d97706";
+        guide.innerHTML = "<strong>🎯 แนวทางการรักษาเบื้องต้น (Action):</strong><br>• รายงานแพทย์เพื่อเฝ้าสังเกตอาการต่อเนื่อง (Admit) และประเมินคะแนน Alvarado Score ซ้ำทุก 1-2 ชั่วโมง<br>• งดน้ำและอาหาร (NPO) ระหว่างรอแพทย์ประเมิน หรือเตรียมส่งตรวจอัลตราซาวด์เพิ่มเติม";
+    } 
+    else if (score >= 7 && score <= 8) {
+        text.innerText = "🟠 โอกาสเป็นไส้ติ่งอักเสบ \"สูง\" (Probable appendicitis)";
+        text.style.color = "#ea580c"; scoreNum.style.color = "#ea580c";
+        container.style.background = "#fff7ed"; container.style.borderColor = "#ffedd5"; guide.style.borderLeftColor = "#ea580c";
+        guide.innerHTML = "<strong>🎯 แนวทางการรักษาเบื้องต้น (Action):</strong><br>• มีความจำเป็นและเป็นไปได้สูงมาก รีบรายงานแพทย์ทันที เพื่อปรึกษาศัลยแพทย์ (Consult Surgeon)<br>• ตั้ง Strict NPO สั่งงดน้ำ งดอาหาร และเปิดเส้นให้สารน้ำทางหลอดเลือดดำ (IV Fluid)";
+    }
+    else if (score >= 9 && score <= 10) {
+        text.innerText = "🔴 โอกาสเป็นไส้ติ่งอักเสบ \"สูงมาก\" (Very probable)";
+        text.style.color = "#dc2626"; scoreNum.style.color = "#dc2626";
+        container.style.background = "#fef2f2"; container.style.borderColor = "#fee2e2"; guide.style.borderLeftColor = "#dc2626";
+        guide.innerHTML = "<strong>🎯 แนวทางการรักษาเบื้องต้น (Action):</strong><br>• 🚨 ภาวะวิกฤตเร่งด่วน! รายงานแพทย์ด่วนที่สุด<br>• ดำเนินการเตรียมผู้ป่วยส่งห้องผ่าตัดฉุกเฉินทันที (Set up for OR) เพื่อผ่าตัดล้างช่องท้องหรือตัดไส้ติ่ง ป้องกันภาวะไส้ติ่งแตกทะลุและติดเชื้อเข้ากระแสเลือด (Sepsis)";
+    }
+}
+
+// ฟังก์ชันสร้าง QR Code ที่มีการตรวจเช็กความปลอดภัย
+window.addEventListener('load', function() {
+    try {
+        var qrContainer = document.getElementById("qrcode");
+        if (qrContainer) {
+            qrContainer.innerHTML = "";
+            new QRCode(qrContainer, {
+                text: window.location.href,
+                width: 120,
+                height: 120,
+                colorDark : "#0f766e",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
+    } catch (e) {
+        console.log("QR Code generation skipped or delayed.");
+    }
+});
+</script>
+</body>
+</html>
