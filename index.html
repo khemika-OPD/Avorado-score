@@ -3,182 +3,500 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alvarado Score - Khemika OPD Takhli</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <title>Takhli OPD Smart Queue - นวัตกรรมระบบคิวเปลอัจฉริยะ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { 
-            --primary-blue: #007bff; --dark-border: #000; --soft-pink: #fff0f3;
-            --news-0: #27ae60; --news-1: #f1c40f; --news-2: #e67e22; --news-3: #d63031;
+        :root {
+            --primary-color: #0288d1;
+            --success-color: #2e7d32;
+            --normal-queue-color: #ffb74d;
+            --urgent-queue-color: #d32f2f;
+            --bg-color: #f4f6f9;
         }
-        body { font-family: 'Sarabun', sans-serif; background-color: var(--soft-pink); margin: 0; padding: 5px; display: flex; justify-content: center; }
-        .main-card { max-width: 450px; width: 100%; background: #fff; border-radius: 12px; border: 3px solid var(--dark-border); overflow: hidden; display: flex; flex-direction: column; }
-        
-        .header { background: linear-gradient(135deg, #007bff, #0056b3); color: white; padding: 10px; text-align: center; border-bottom: 3px solid var(--dark-border); }
-        .header h1 { margin: 0; font-size: 1rem; }
-        .header p { margin: 1px 0; font-size: 0.75rem; font-weight: 700; }
-
-        .body { padding: 15px; min-height: 320px; display: flex; flex-direction: column; justify-content: center; }
-        .step { display: none; }
-        .step.active { display: block; }
-
-        .question-label { font-size: 1.1rem; font-weight: 700; color: #0056b3; margin-bottom: 5px; display: block; text-align: center; }
-        .sub-guide { font-size: 0.8rem; color: #d63031; text-align: center; display: block; margin-bottom: 15px; font-weight: bold; }
-        
-        .radio-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
-        .radio-grid input[type="radio"] { display: none; }
-        .radio-grid label {
-            display: block; padding: 12px; border-radius: 10px; cursor: pointer;
-            font-size: 0.95rem; text-align: center; font-weight: 700; border: 2px solid #ccc; transition: 0.2s;
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
         }
-
-        .btn-0 { background-color: #e8f5e9; border-color: var(--news-0) !important; color: #1b5e20; }
-        .btn-1 { background-color: #fffde7; border-color: var(--news-1) !important; color: #827717; }
-        .btn-2 { background-color: #ffebee; border-color: var(--news-3) !important; color: #b71c1c; }
-
-        input[type="radio"]:checked + label { background-color: #333 !important; color: white !important; border-color: #000 !important; }
-
-        .nav-btns { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
-        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-family: 'Sarabun'; font-weight: 700; cursor: pointer; flex: 1; }
-        .btn-back { background: #6c757d; color: white; }
-
-        .result-screen { text-align: center; }
-        .score-val { font-size: 4rem; font-weight: 700; line-height: 1; color: #333; margin: 10px 0; }
-        .advice-box { padding: 15px; border-radius: 10px; color: white; font-weight: 700; border: 3px solid var(--dark-border); }
+        .header {
+            background: linear-gradient(135deg, #01579b, #0288d1);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        .role-switcher {
+            display: flex;
+            background: #e0e0e0;
+            border-radius: 30px;
+            padding: 5px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .role-btn {
+            flex: 1;
+            border: none;
+            background: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            color: #555;
+        }
+        .role-btn.active {
+            background: white;
+            color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #333;
+        }
+        .select-input, .search-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            box-sizing: border-box;
+            font-family: 'Sarabun', sans-serif;
+            background-color: #fff;
+        }
+        .search-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 5px rgba(2, 136, 209, 0.3);
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-success { background-color: var(--success-color); color: white; }
+        .btn-warning { background-color: #e65100; color: white; }
+        
+        .profile-zone {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e1f5fe;
+            border-left: 5px solid var(--primary-color);
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        .queue-item {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .queue-item.normal-pending {
+            border-color: var(--normal-queue-color);
+            box-shadow: 0 0 8px rgba(255, 183, 77, 0.2);
+        }
+        .queue-item.urgent-pending {
+            border-color: var(--urgent-queue-color);
+            animation: pulse-urgent 1.5s infinite;
+        }
+        @keyframes pulse-urgent {
+            0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(211, 47, 47, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+        }
+        .tag {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        .tag-normal { background-color: var(--normal-queue-color); color: #333; }
+        .tag-urgent { background-color: var(--urgent-queue-color); }
+        .tag-success { background-color: var(--success-color); }
+        .app-mode { display: none; }
+        .app-mode.active { display: block; }
     </style>
 </head>
 <body>
 
-<div class="main-card">
     <div class="header">
-        <h1>Alvarado Score Calculator</h1>
-        <p>พัฒนาโดย Khemika-OPD Takhli</p>
+        <h2>🏥 นวัตกรรมระบบคิวเปลอัจฉริยะ (Smart Queue)</h2>
+        <p>กลุ่มงานผู้ป่วยนอก (OPD) โรงพยาบาลตาคลี</p>
     </div>
 
-    <div class="body">
-        <!-- 1. Migration -->
-        <div class="step active" id="step1">
-            <span class="question-label">1. การย้ายของอาการปวด</span>
-            <span class="sub-guide">(ปวดรอบสะดือย้ายไปที่ท้องน้อยขวา)</span>
-            <div class="radio-grid">
-                <input type="radio" name="m" id="m1" value="1" onclick="nextStep(2)"><label for="m1" class="btn-1">มีอาการ (+1)</label>
-                <input type="radio" name="m" id="m0" value="0" onclick="nextStep(2)"><label for="m0" class="btn-0">ไม่มีอาการ (0)</label>
+    <div class="container">
+        
+        <div class="role-switcher">
+            <button id="btnNurseMode" class="role-btn active" onclick="switchMode('nurse')">
+                <i class="fa-solid fa-user-nurse"></i> 1. ฝั่งพยาบาลสั่งงาน
+            </button>
+            <button id="btnStaffMode" class="role-btn" onclick="switchMode('staff')">
+                <i class="fa-solid fa-wheelchair"></i> 2. ฝั่งพนักงานเปลรับงาน
+            </button>
+        </div>
+
+        <div id="nurseModeSection" class="app-mode active">
+            <div class="card">
+                <h3 style="margin-top:0; color: var(--primary-color);"><i class="fa-solid fa-paper-plane"></i> คีย์ส่งงานคิวเปลด่วน</h3>
+                
+                <div class="form-group">
+                    <label style="color: var(--urgent-queue-color); font-weight: bold;">🚨 ระดับความเร่งด่วน:</label>
+                    <select id="jobPriority" class="select-input" style="border: 2px solid var(--normal-queue-color);">
+                        <option value="ปกติ">🟡 ระดับปกติ</option>
+                        <option value="เร่งด่วน">🔴 ระดับเร่งด่วน</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>🦽 ประเภทอุปกรณ์ที่ต้องใช้:</label>
+                    <select id="jobType" class="select-input">
+                        <option value="รถเข็นนั่ง (Wheelchair) 🦽">รถเข็นนั่ง (Wheelchair) 🦽</option>
+                        <option value="รถนอน (Stretcher) 𛏱">รถนอน (Stretcher) 𛏱</option>
+                        <option value="เดินประคอง 🚶‍♂️">เดินประคอง 🚶‍♂️</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>📍 จุดต้นทาง:</label>
+                    <input list="fromLocations" id="jobFrom" class="search-input" placeholder="👉 พิมพ์พยัญชนะเพื่อค้นหาจุดต้นทาง..." autocomplete="off">
+                    <datalist id="fromLocations">
+                        <option value="จุดแยกตรวจ"><option value="จุดซักประวัติ"><option value="หน้าห้องบัตร"><option value="จุดรถนั่ง"><option value="จุด 10"><option value="หน้าห้องตรวจ 6"><option value="จุด 99"><option value="หน้าห้อง Lab"><option value="หน้าห้องยา"><option value="ประชาสัมพันธ์"><option value="หน้าห้องการเงิน"><option value="คลินิกพิเศษ"><option value="ห้องน้ำ"><option value="ห้องฉุกเฉิน (ER)">
+                    </datalist>
+                </div>
+
+                <div class="form-group">
+                    <label>➡️ จุดปลายทาง:</label>
+                    <input list="toLocations" id="jobTo" class="search-input" placeholder="👉 พิมพ์พยัญชนะเพื่อค้นหาจุดปลายทาง..." autocomplete="off">
+                    <datalist id="toLocations">
+                        <option value="กลับบ้าน OPD 🏠"><option value="กลับบ้าน ER 🏠"><option value="ห้องผ่าตัด"><option value="ห้องคลอด"><option value="ห้องฝากครรภ์"><option value="ห้อง ICU"><option value="ห้องฉุกเฉิน ER"><option value="ห้องเอกซเรย์"><option value="ห้องจิตเวช"><option value="ห้องกายภาพ"><option value="ห้อง CT"><option value="ทันตกรรมบน"><option value="ทันตกรรมล่าง"><option value="ตึกหญิง"><option value="ตึกเด็ก"><option value="ตึกชาย"><option value="ตึกพิเศษ">
+                    </datalist>
+                </div>
+
+                <button class="btn btn-primary" onclick="sendJobFromNurse()">
+                    <i class="fa-solid fa-plus"></i> ➕ กดส่งงานไปที่จุดเปลทันที
+                </button>
+                
+                <button class="btn btn-warning" style="margin-top: 15px;" onclick="clearAllDataForNewDay()">
+                    <i class="fa-solid fa-trash-can"></i> 🌅 กดล้างกระดานเริ่มต้นคิวใหม่ (สำหรับขึ้นวันใหม่)
+                </button>
             </div>
         </div>
 
-        <!-- 2. Anorexia -->
-        <div class="step" id="step2">
-            <span class="question-label">2. เบื่ออาหาร (Anorexia)</span>
-            <span class="sub-guide">(หรือตรวจพบ Ketone ในปัสสาวะ)</span>
-            <div class="radio-grid">
-                <input type="radio" name="a" id="a1" value="1" onclick="nextStep(3)"><label for="a1" class="btn-1">มีอาการ (+1)</label>
-                <input type="radio" name="a" id="a0" value="0" onclick="nextStep(3)"><label for="a0" class="btn-0">ไม่มีอาการ (0)</label>
+        <div id="staffModeSection" class="app-mode">
+            <div id="loginSection" class="card">
+                <h3>🔑 ยืนยันตัวตนพนักงานเปล (ทำครั้งแรกครั้งเดียว)</h3>
+                <label for="staffName">เลือกชื่อของท่านเพื่อผูกกับมือถือเครื่องนี้:</label>
+                <select id="staffName" class="select-input">
+                    <option value="">-- กรุณาเลือกชื่อของท่าน --</option>
+                    <option value="สมใจ">พนักงานเปล - สมใจ</option>
+                    <option value="สมบัติ">พนักงานเปล - สมบัติ</option>
+                    <option value="นิรันดร์">พนักงานเปล - นิรันดร์</option>
+                </select>
+                <button class="btn btn-primary" style="margin-top:10px;" onclick="saveProfile()">บันทึกเข้าใช้งานเครื่องนี้</button>
             </div>
-            <div class="nav-btns"><button class="btn btn-back" onclick="prevStep(1)">กลับ</button></div>
-        </div>
 
-        <!-- 3. Nausea -->
-        <div class="step" id="step3">
-            <span class="question-label">3. คลื่นไส้ / อาเจียน</span>
-            <div class="radio-grid">
-                <input type="radio" name="n" id="n1" value="1" onclick="nextStep(4)"><label for="n1" class="btn-1">มีอาการ (+1)</label>
-                <input type="radio" name="n" id="n0" value="0" onclick="nextStep(4)"><label for="n0" class="btn-0">ไม่มีอาการ (0)</label>
+            <div id="profileSection" class="profile-zone" style="display: none;">
+                <div>
+                    <i class="fa-solid fa-id-card" style="color: #0288d1;"></i> 
+                    ผู้ใช้งานเครื่องนี้: <strong id="currentStaffLabel"></strong>
+                </div>
+                <button style="background: none; border: none; color: #d32f2f; cursor: pointer; text-decoration: underline;" onclick="clearProfile()">เปลี่ยนชื่อ</button>
             </div>
-            <div class="nav-btns"><button class="btn btn-back" onclick="prevStep(2)">กลับ</button></div>
-        </div>
 
-        <!-- 4. Tenderness -->
-        <div class="step" id="step4">
-            <span class="question-label">4. กดเจ็บท้องน้อยขวา (RLQ)</span>
-            <span class="sub-guide">*** หัวข้อนี้สำคัญมาก ***</span>
-            <div class="radio-grid">
-                <input type="radio" name="t" id="t2" value="2" onclick="nextStep(5)"><label for="t2" class="btn-2">มีอาการกดเจ็บ (+2)</label>
-                <input type="radio" name="t" id="t0" value="0" onclick="nextStep(5)"><label for="t0" class="btn-0">ไม่มีอาการ (0)</label>
-            </div>
-            <div class="nav-btns"><button class="btn btn-back" onclick="prevStep(3)">กลับ</button></div>
-        </div>
-
-        <!-- 5. Rebound -->
-        <div class="step" id="step5">
-            <span class="question-label">5. ปวดปล่อย (Rebound Tenderness)</span>
-            <div class="radio-grid">
-                <input type="radio" name="r" id="r1" value="1" onclick="nextStep(6)"><label for="r1" class="btn-1">มีอาการ (+1)</label>
-                <input type="radio" name="r" id="r0" value="0" onclick="nextStep(6)"><label for="r0" class="btn-0">ไม่มีอาการ (0)</label>
-            </div>
-            <div class="nav-btns"><button class="btn btn-back" onclick="prevStep(4)">กลับ</button></div>
-        </div>
-
-        <!-- 6. Fever -->
-        <div class="step" id="step6">
-            <span class="question-label">6. มีไข้ (Elevated Temp)</span>
-            <span class="sub-guide">(อุณหภูมิ ≥ 37.3 °C)</span>
-            <div class="radio-grid">
-                <input type="radio" name="e" id="e1" value="1" onclick="nextStep(7)"><label for="e1" class="btn-1">มีไข้ (+1)</label>
-                <input type="radio" name="e" id="e0" value="0" onclick="nextStep(7)"><label for="e0" class="btn-0">ไม่มีไข้ (0)</label>
-            </div>
-            <div class="nav-btns"><button class="btn btn-back" onclick="prevStep(5)">กลับ</button></div>
-        </div>
-
-        <!-- 7. WBC -->
-        <div class="step" id="step7">
-            <span class="question-label">7. WBC > 10,000 /mm³</span>
-            <span class="sub-guide">*** หัวข้อนี้สำคัญมาก ***</span>
-            <div class="radio-grid">
-                <input type="radio" name="l" id="l2" value="2" onclick="nextStep(8)"><label for="l2" class="btn-2">WBC สูง (+2)</label>
-                <input type="radio" name="l" id="l0" value="0" onclick="nextStep(8)"><label for="l0" class="btn-0">ปกติ (0)</label>
-            </div>
-            <div class="nav-btns"><button class="btn btn-back" onclick="prevStep(6)">กลับ</button></div>
-        </div>
-
-        <!-- 8. Shift -->
-        <div class="step" id="step8">
-            <span class="question-label">8. Neutrophil > 75%</span>
-            <div class="radio-grid">
-                <input type="radio" name="s" id="s1" value="1" onclick="finish()"><label for="s1" class="btn-1">มี Shift to left (+1)</label>
-                <input type="radio" name="s" id="s0" value="0" onclick="finish()"><label for="s0" class="btn-0">ปกติ (0)</label>
-            </div>
-            <div class="nav-btns"><button class="btn btn-back" onclick="prevStep(7)">กลับ</button></div>
-        </div>
-
-        <!-- Result -->
-        <div class="step" id="resultStep">
-            <div class="result-screen">
-                <span class="question-label">สรุปผล Alvarado Score</span>
-                <div class="score-val" id="totalScore">0</div>
-                <div id="adviceBox" class="advice-box"></div>
-                <button class="btn" style="margin-top:20px; background:#333; color:white;" onclick="location.reload()">เริ่มประเมินใหม่</button>
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h3 style="margin: 0; color: #333;">📋 บอร์ดคิวงานรับส่งผู้ป่วยด่วน</h3>
+                    <span id="syncStatus" style="font-size: 12px; color: #2e7d32; font-weight: bold;"><i class="fa-solid fa-rotate fa-spin"></i> กำลังอัปเดตอัตโนมัติ...</span>
+                </div>
+                
+                <div id="queueList">
+                    <div id="emptyMessage" style="text-align: center; color: #999; padding: 20px;">
+                        <i class="fa-solid fa-circle-info" style="font-size: 24px; color: #ccc;"></i><br>
+                        ขณะนี้ยังไม่มีคิวค้างในระบบ สบายใจได้ค่ะ
+                    </div>
+                </div>
             </div>
         </div>
+        
     </div>
-</div>
 
-<script>
-    let currentStep = 1;
-    function nextStep(s) {
-        document.getElementById(`step${currentStep}`).classList.remove('active');
-        document.getElementById(`step${s}`).classList.add('active');
-        currentStep = s;
-    }
-    function prevStep(s) {
-        document.getElementById(`step${currentStep}`).classList.remove('active');
-        document.getElementById(`step${s}`).classList.add('active');
-        currentStep = s;
-    }
-    function finish() {
-        let total = 0;
-        const keys = ['m', 'a', 'n', 't', 'r', 'e', 'l', 's'];
-        keys.forEach(k => {
-            const el = document.querySelector(`input[name="${k}"]:checked`);
-            if(el) total += parseInt(el.value);
-        });
-        document.getElementById('totalScore').innerText = total;
-        const box = document.getElementById('adviceBox');
-        if (total <= 4) { box.style.backgroundColor = "#27ae60"; box.innerText = "1-4: โอกาสเป็นน้อย (Discharge ได้)"; }
-        else if (total <= 6) { box.style.backgroundColor = "#e67e22"; box.innerText = "5-6: สงสัย (ควร Admit เพื่อสังเกตอาการ)"; }
-        else if (total <= 8) { box.style.backgroundColor = "#d63031"; box.innerText = "7-8: โอกาสเป็นสูง (ส่งปรึกษาศัลยแพทย์)"; }
-        else { box.style.backgroundColor = "#000"; box.innerText = "9-10: เป็นแน่นอน (เตรียมผ่าตัด)"; }
-        document.getElementById(`step${currentStep}`).classList.remove('active');
-        document.getElementById('resultStep').classList.add('active');
-    }
-</script>
+    <audio id="normalSound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
+    <audio id="urgentSound" src="https://actions.google.com/sounds/v1/alarms/mechanical_clock_ring.ogg" loop preload="auto"></audio>
+
+    <script>
+        // 🎯 ผูกลิงก์ตัวล็อก ID สเปรดชีตสมบูรณ์แบบตัวจริงของพี่เขมิกาแล้วค่ะ
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxo4O9Vb7B36fS0bQJq6w3_O7Vp-L3vD7M7h1b3L_U2_9S_Z9oR_9Z_Y7W_V-XD6_j7_A/exec" ? "https://script.google.com/macros/s/AKfycbysFkk1Ov2CbEPcmUkviMvXIynLrycc-a4tb37kaJ7pwuo7oFUXwCS9glb_v-XD6_j7_A/exec" : "https://script.google.com/macros/s/AKfycbxhV2bKtviWSmzJpa-WzUN5tg0MgEdAudQt63WNolGH613l8F8FQAgrOLDW4Q5gzjU2bA/exec" ? "https://script.google.com/macros/s/AKfycbzDUGxBXZsMGk3pKWxdzg0rHdo1KqsNoDSGbAYGeQDoziZOPZhBvY7PR2wqm1XLnZturw/exec" : "https://script.google.com/macros/s/AKfycbzDUGxBXZsMGk3pKWxdzg0rHdo1KqsNoDSGbAYGeQDoziZOPZhBvY7PR2wqm1XLnZturw/exec";
+
+        let currentStaff = "";
+        let urgentPlaying = false;
+
+        window.onload = function() {
+            const savedName = localStorage.getItem("OPD_Staff_Name");
+            if (savedName) {
+                currentStaff = savedName;
+                document.getElementById("currentStaffLabel").innerText = "คุณ " + savedName;
+                document.getElementById("loginSection").style.display = "none";
+                document.getElementById("profileSection").style.display = "flex";
+            }
+            fetchDataFromSheet();
+            setInterval(fetchDataFromSheet, 5000); 
+        };
+
+        function switchMode(role) {
+            document.getElementById("btnNurseMode").classList.remove("active");
+            document.getElementById("btnStaffMode").classList.remove("active");
+            document.getElementById("nurseModeSection").classList.remove("active");
+            document.getElementById("staffModeSection").classList.remove("active");
+
+            if (role === 'nurse') {
+                document.getElementById("btnNurseMode").classList.add("active");
+                document.getElementById("nurseModeSection").classList.add("active");
+            } else {
+                document.getElementById("btnStaffMode").classList.add("active");
+                document.getElementById("staffModeSection").classList.add("active");
+            }
+        }
+
+        function sendJobFromNurse() {
+            const priority = document.getElementById("jobPriority").value;
+            const type = document.getElementById("jobType").value;
+            const from = document.getElementById("jobFrom").value;
+            const to = document.getElementById("jobTo").value;
+
+            if (!from || !to) {
+                alert("⚠️ ข้อผิดพลาด: กรุณาระบุจุดต้นทางและจุดปลายทางก่อนกดส่งงานด้วยค่ะ");
+                return;
+            }
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('th-TH', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const cleanStartDateTime = `${dateStr} ${now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
+
+            const payload = {
+                time: cleanStartDateTime,
+                type: type,
+                priority: priority,
+                origin: from, 
+                to: to,
+                staff: "", 
+                status: "" 
+            };
+
+            fetch(GOOGLE_SHEET_URL, {
+                method: "POST",
+                mode: "no-cors",
+                cache: "no-cache",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                alert("📝 สั่งงานคิวเปลเข้าชีตสำเร็จ! ระบบจะดีดคิวแสดงผลอัตโนมัติภายใน 5 วินาทีค่ะ");
+                document.getElementById("jobFrom").value = "";
+                document.getElementById("jobTo").value = "";
+                switchMode('staff');
+                fetchDataFromSheet();
+            }).catch(err => {
+                alert("การเชื่อมต่อขัดข้อง กรุณาลองส่งใหม่อีกครั้งค่ะ");
+            });
+        }
+
+        function clearAllDataForNewDay() {
+            if (confirm("🚨 คำเตือนวิกฤต: คุณต้องการลบประวัติงานคิวเปลทั้งหมดเพื่อเริ่มต้นคิววันใหม่ใช่หรือไม่? (ข้อมูลเดิมจะถูกล้างเกลี้ยง)")) {
+                const payload = { action: "clearAllData" };
+                
+                fetch(GOOGLE_SHEET_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    cache: "no-cache",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                }).then(() => {
+                    alert("🌅 ล้างข้อมูลกระดานรับงานขึ้นวันใหม่เรียบร้อยค่ะ! เริ่มรันคิวที่ 1 ของวันนี้ได้เลย");
+                    fetchDataFromSheet();
+                }).catch(err => {
+                    alert("ไม่สามารถล้างข้อมูลได้ กรุณาลองใหม่อีกครั้งค่ะ");
+                });
+            }
+        }
+
+        function fetchDataFromSheet() {
+            document.getElementById("syncStatus").innerHTML = "<i class='fa-solid fa-rotate fa-spin'></i> กำลังตรวจเช็กคิวงานด่วน...";
+            
+            const oldScript = document.getElementById("jsonpScript");
+            if (oldScript) oldScript.remove();
+
+            const script = document.createElement("script");
+            script.id = "jsonpScript";
+            script.src = GOOGLE_SHEET_URL + "?callback=handleSheetData&nocache=" + new Date().getTime();
+            document.body.appendChild(script);
+        }
+
+        function handleSheetData(data) {
+            document.getElementById("syncStatus").innerHTML = "<i class='fa-solid fa-circle-check'></i> เชื่อมต่อเรียลไทม์";
+            if (!Array.isArray(data)) return;
+
+            const queueList = document.getElementById("queueList");
+            queueList.innerHTML = "";
+
+            // 🎯 กรองล้าง: แสดงเฉพาะงานที่ คอลัมน์พนักงานเปล (porter) และ เวลารับ (acceptTime) เป็นช่องว่างจริง ๆ เท่านั้น!
+            const pendingJobs = data.filter(job => job.timestamp && job.timestamp.toString().trim() !== "" && (!job.porter || job.porter.toString().trim() === "") && (!job.acceptTime || job.acceptTime.toString().trim() === ""));
+
+            if (pendingJobs.length === 0) {
+                queueList.innerHTML = `
+                    <div id="emptyMessage" style="text-align: center; color: #999; padding: 20px;">
+                        <i class="fa-solid fa-circle-info" style="font-size: 24px; color: #ccc;"></i><br>
+                        ขณะนี้ยังไม่มีคิวค้างในระบบ สบายใจได้ค่ะ
+                    </div>`;
+                stopUrgentSound();
+                return;
+            }
+
+            let hasUrgent = false;
+
+            pendingJobs.forEach((job) => {
+                const newCard = document.createElement("div");
+                let cardClass = "queue-item normal-pending";
+                let tagHTML = `<span class="tag tag-normal">🟡 ความเร่งด่วน: ${job.priority}</span>`;
+
+                if (job.priority === "เร่งด่วน") {
+                    cardClass = "queue-item urgent-pending";
+                    tagHTML = `<span class="tag tag-urgent"><i class="fa-solid fa-triangle-exclamation"></i> ความเร่งด่วน: 🔴 ${job.priority}</span>`;
+                    hasUrgent = true;
+                }
+
+                newCard.className = cardClass;
+                newCard.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        ${tagHTML}
+                        <small style="color: #666;"><i class="fa-regular fa-clock"></i> สั่งงานเมื่อ: ${job.timestamp}</small>
+                    </div>
+                    <strong>🚨 อุปกรณ์:</strong> ${job.equipment}<br>
+                    <strong>📍 ต้นทาง:</strong> ${job.origin}<br>
+                    <strong>➡️ ปลายทาง:</strong> ${job.destination}
+                    <div style="margin-top: 12px;">
+                        <button class="btn btn-success" onclick="acceptJobFromStaff('${job.timestamp}', '${job.priority}', '${job.equipment}', '${job.origin}', '${job.destination}', this)">
+                            <i class="fa-solid fa-person-running"></i> 🏃‍♂️ รับคิวงานนี้ทันที (คลิกเดียวจบ)
+                        </button>
+                    </div>
+                `;
+                queueList.appendChild(newCard);
+            });
+
+            if (hasUrgent && !urgentPlaying) {
+                document.getElementById("urgentSound").play().catch(e => {});
+                urgentPlaying = true;
+            } else if (!hasUrgent) {
+                stopUrgentSound();
+            }
+        }
+
+        function stopUrgentSound() {
+            const uSound = document.getElementById("urgentSound");
+            if(uSound) {
+                uSound.pause();
+                uSound.currentTime = 0;
+            }
+            urgentPlaying = false;
+        }
+
+        function acceptJobFromStaff(timestamp, priority, equipment, origin, destination, btnElement) {
+            if (!currentStaff) {
+                alert("⚠️ พนักงานเปลกรุณาเลือกชื่อยืนยันตัวตนด้านบนก่อนกดรับงานค่ะ!");
+                return;
+            }
+
+            btnElement.disabled = true;
+            btnElement.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> กำลังบันทึกสถิติลง Google Sheets...";
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('th-TH', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const cleanEndDateTime = `${dateStr} ${now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}`;
+
+            const payload = {
+                time: timestamp,
+                type: equipment,
+                priority: priority,
+                origin: origin,
+                to: destination,
+                staff: currentStaff,
+                status: cleanEndDateTime 
+            };
+
+            fetch(GOOGLE_SHEET_URL, {
+                method: "POST",
+                mode: "no-cors",
+                cache: "no-cache",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                stopUrgentSound();
+                alert(`✔️ สำเร็จ! คุณ ${currentStaff} รับงานคิวนี้เรียบร้อย ข้อมูลลงชีตเรียบร้อยค่ะ`);
+                fetchDataFromSheet();
+            }).catch(err => {
+                alert("การเชื่อมต่อขัดข้อง กรุณาลองใหม่อีกครั้งค่ะ");
+                btnElement.disabled = false;
+                btnElement.innerHTML = "<i class='fa-solid fa-person-running'></i> 🏃‍♂️ รับคิวงานนี้ทันที (คลิกเดียวจบ)";
+            });
+        }
+
+        function saveProfile() {
+            const selectedName = document.getElementById("staffName").value;
+            if (!selectedName) {
+                alert("กรุณาเลือกชื่อพนักงานก่อนค่ะ");
+                return;
+            }
+            localStorage.setItem("OPD_Staff_Name", selectedName);
+            currentStaff = selectedName;
+            document.getElementById("currentStaffLabel").innerText = "คุณ " + selectedName;
+            document.getElementById("loginSection").style.display = "none";
+            document.getElementById("profileSection").style.display = "flex";
+            alert("บันทึกตัวตนเรียบร้อยค่ะ");
+            fetchDataFromSheet();
+        }
+
+        function clearProfile() {
+            if(confirm("ต้องการเปลี่ยนบัญชีผู้ใช้งานใช่หรือไม่?")) {
+                localStorage.removeItem("OPD_Staff_Name");
+                location.reload();
+            }
+        }
+    </script>
 </body>
 </html>
