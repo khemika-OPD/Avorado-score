@@ -4,122 +4,140 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alvarado Score Calculator - รพ.ตาคลี</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Kanit:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&family=Kanit:wght@500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body { font-family: 'Sarabun', sans-serif; background-color: #f1f5f9; margin: 0; padding: 15px; display: flex; justify-content: center; }
-        .wrapper { max-width: 500px; width: 100%; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        h1 { font-family: 'Kanit', sans-serif; color: #0d9488; font-size: 22px; text-align: center; margin: 0 0 5px 0; }
-        .subtitle { color: #64748b; font-size: 14px; text-align: center; margin: 0 0 20px 0; }
-        .section-title { font-family: 'Kanit', sans-serif; font-size: 15px; color: #1e293b; background: #f8fafc; padding: 6px 12px; border-left: 4px solid #0d9488; margin: 15px 0 10px 0; }
-        .checkbox-group { display: flex; align-items: center; justify-content: space-between; padding: 12px 10px; border-bottom: 1px solid #f1f5f9; cursor: pointer; }
-        .checkbox-group:hover { background: #fafafa; }
-        .checkbox-group label { font-size: 15px; color: #334155; cursor: pointer; flex-grow: 1; }
-        .checkbox-group input { width: 18px; height: 18px; accent-color: #0d9488; cursor: pointer; }
-        .result-box { background: #f0fdf4; border: 2px dashed #2dd4bf; border-radius: 12px; padding: 20px; text-align: center; margin-top: 25px; }
-        .score-display { font-family: 'Kanit', sans-serif; font-size: 48px; color: #0f766e; font-weight: bold; margin: 5px 0; }
-        .interpretation { font-weight: bold; font-size: 16px; margin-top: 5px; }
-        .footer { text-align: center; margin-top: 20px; font-size: 11px; color: #94a3b8; }
+        body { 
+            font-family: 'Sarabun', sans-serif; 
+            background-color: #f0f4f8; 
+            margin: 0; 
+            padding: 15px; 
+            display: flex; 
+            justify-content: center; 
+        }
+        .wrapper { 
+            max-width: 550px; 
+            width: 100%; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(13, 148, 136, 0.1); 
+        }
+        h1 { 
+            font-family: 'Kanit', sans-serif; 
+            color: #0d9488; 
+            font-size: 24px; 
+            text-align: center; 
+            margin: 0 0 5px 0; 
+        }
+        .subtitle { 
+            color: #64748b; 
+            font-size: 14px; 
+            text-align: center; 
+            margin: 0 0 25px 0; 
+            font-weight: 500;
+        }
+        .section-title { 
+            font-family: 'Kanit', sans-serif; 
+            font-size: 16px; 
+            color: #1e293b; 
+            background: #f8fafc; 
+            padding: 8px 14px; 
+            border-left: 4px solid #0d9488; 
+            margin: 20px 0 10px 0; 
+            border-radius: 0 6px 6px 0;
+        }
+        .checkbox-group { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 12px 14px; 
+            border-bottom: 1px solid #f1f5f9; 
+            cursor: pointer; 
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .checkbox-group:hover { 
+            background: #f0fdfa; 
+        }
+        .checkbox-group label { 
+            font-size: 15px; 
+            color: #334155; 
+            cursor: pointer; 
+            flex-grow: 1; 
+            padding-right: 15px;
+        }
+        .checkbox-group input { 
+            width: 20px; 
+            height: 20px; 
+            accent-color: #0d9488; 
+            cursor: pointer; 
+        }
+        .result-box { 
+            background: #f8fafc; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 16px; 
+            padding: 22px; 
+            text-align: center; 
+            margin-top: 30px; 
+            transition: all 0.3s ease;
+        }
+        .score-display { 
+            font-family: 'Kanit', sans-serif; 
+            font-size: 54px; 
+            color: #475569; 
+            font-weight: bold; 
+            margin: 5px 0; 
+            line-height: 1;
+        }
+        .interpretation { 
+            font-family: 'Kanit', sans-serif;
+            font-weight: 600; 
+            font-size: 18px; 
+            margin-top: 10px; 
+        }
+        .clinical-guide {
+            font-size: 14px;
+            color: #64748b;
+            margin-top: 8px;
+            line-height: 1.5;
+            text-align: left;
+            background: rgba(255,255,255,0.7);
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+        .footer { 
+            text-align: center; 
+            margin-top: 25px; 
+            font-size: 12px; 
+            color: #94a3b8; 
+        }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
     <h1>📊 Alvarado Score Calculator</h1>
-    <p class="subtitle">ระบบคัดกรองความเสี่ยงไส้ติ่งอักเสบเฉียบพลัน รพ.ตาคลี</p>
+    <p class="subtitle">ระบบประเมินความน่าจะเป็นของภาวะไส้ติ่งอักเสบเฉียบพลัน รพ.ตาคลี</p>
 
-    <div class="section-title"><i class="fa-solid fa-user-injured"></i> อาการวิทยา (Symptoms)</div>
+    <div class="section-title"><i class="fa-solid fa-stethoscope"></i> อาการและอาการแสดง (รวม 7 คะแนน)</div>
+    
     <div class="checkbox-group">
-        <label for="sym1">มีอาการปวดย้ายพิกัด (จากรอบสะดือมาเบ้าตาขวา/RLQ)</label>
+        <label for="sym1">ย้ายตำแหน่งการปวด: เริ่มปวดรอบสะดือแล้วย้ายไปท้องน้อยขวาล่าง</label>
         <input type="checkbox" id="sym1" value="1" onchange="calculateAlvarado()">
     </div>
+    
     <div class="checkbox-group">
-        <label for="sym2">เบื่ออาหาร (Anorexia) หรือมีสารคีโตนในปัสสาวะ</label>
+        <label for="sym2">เบื่ออาหาร: มีอาการเบื่ออาหารหรือตรวจพบสารคีโตนในปัสสาวะ</label>
         <input type="checkbox" id="sym2" value="1" onchange="calculateAlvarado()">
     </div>
+    
     <div class="checkbox-group">
-        <label for="sym3">มีอาการคลื่นไส้ หรือ อาเจียน (Nausea/Vomiting)</label>
+        <label for="sym3">คลื่นไส้ / อาเจียน</label>
         <input type="checkbox" id="sym3" value="1" onchange="calculateAlvarado()">
     </div>
-
-    <div class="section-title"><i class="fa-solid fa-stethoscope"></i> การตรวจร่างกาย (Signs)</div>
-    <div class="checkbox-group" style="background: #fff7ed;">
-        <label for="sign1"><strong>กดเจ็บมากที่ท้องน้อยด้านขวา (RLQ Tenderness) [2 คะแนน]</strong></label>
-        <input type="checkbox" id="sign1" value="2" onchange="calculateAlvarado()">
-    </div>
-    <div class="checkbox-group">
-        <label for="sign2">มีการกดปล่อยแล้วเจ็บ (Rebound Tenderness)</label>
-        <input type="checkbox" id="sign2" value="1" onchange="calculateAlvarado()">
-    </div>
-    <div class="checkbox-group">
-        <label for="sign3">มีไข้สูงเกินหรือเท่ากับ 37.3 °C (Elevated Temperature)</label>
-        <input type="checkbox" id="sign3" value="1" onchange="calculateAlvarado()">
-    </div>
-
-    <div class="section-title"><i class="fa-solid fa-flask"></i> ผลทางห้องปฏิบัติการ (Laboratory)</div>
-    <div class="checkbox-group" style="background: #f0fdfa;">
-        <label for="lab1"><strong>เม็ดเลือดขาวสูง WBC > 10,000 /mm³ [2 คะแนน]</strong></label>
-        <input type="checkbox" id="lab1" value="2" onchange="calculateAlvarado()">
-    </div>
-    <div class="checkbox-group">
-        <label for="lab2">พบ Neutrophil ในผลเลือดเพิ่มขึ้น (Shift to the left > 75%)</label>
-        <input type="checkbox" id="lab2" value="1" onchange="calculateAlvarado()">
-    </div>
-
-    <div class="result-box">
-        <span style="font-size: 14px; color: #475569; font-weight: 500;">คะแนนรวมของคุณไข้</span>
-        <div class="score-display" id="totalScore">0</div>
-        <div class="interpretation" id="interpretText" style="color: #64748b;">กรุณาติ๊กเลือกอาการคนไข้</div>
-    </div>
-
-    <div class="footer">
-        OPD Digital Toolkit | พัฒนาเชิงนวัตกรรมโดย คุณเขมิกา พงษ์ศรี รพ.ตาคลี
-    </div>
-</div>
-
-<script>
-function calculateAlvarado() {
-    let score = 0;
     
-    // วนลูปนับคะแนนจาก checkbox ทุกตัวที่โดนติ๊ก
-    for(let i = 1; i <= 3; i++) {
-        if(document.getElementById('sym' + i).checked) score += parseInt(document.getElementById('sym' + i).value);
-    }
-    for(let i = 1; i <= 3; i++) {
-        if(document.getElementById('sign' + i).checked) score += parseInt(document.getElementById('sign' + i).value);
-    }
-    for(let i = 1; i <= 2; i++) {
-        if(document.getElementById('lab' + i).checked) score += parseInt(document.getElementById('lab' + i).value);
-    }
-
-    // แสดงคะแนนบนหน้าจอ
-    document.getElementById('totalScore').innerText = score;
-
-    // แปลผลเกณฑ์ตามมาตรฐานวิชาการ
-    let text = "";
-    let color = "";
-
-    if (score === 0) {
-        text = "กรุณาติ๊กเลือกอาการคนไข้";
-        color = "#64748b";
-    } else if (score >= 1 && score <= 4) {
-        text = "🟢 ความเสี่ยงต่ำ (Low Probability) - โอกาสเป็นไส้ติ่งอักเสบต่ำมาก แนะนำสังเกตอาการ";
-        color = "#15803d";
-    } else if (score >= 5 && score <= 6) {
-        text = "🟡 มีความเป็นไปได้ (Possible) - ควรเฝ้าระวังหรือส่งเอกซเรย์คอมพิวเตอร์/อัลตราซาวด์เพิ่มเติม";
-        color = "#b45309";
-    } else if (score >= 7 && score <= 8) {
-        text = "🟠 ความเสี่ยงสูง (Probable) - แนะนำปรึกษาแพทย์ศัลยกรรม (Set Up for OR)";
-        color = "#c2410c";
-    } else if (score >= 9 && score <= 10) {
-        text = "🔴 ความเสี่ยงสูงมาก (Definite Appendicitis) - โอกาสเป็นไส้ติ่งอักเสบสูงมาก ดำเนินการตามวิถีฉุกเฉิน";
-        color = "#b91c1c";
-    }
-
-    document.getElementById('interpretText').innerText = text;
-    document.getElementById('interpretText').style.color = color;
-}
-</style>
-
-</body>
-</html>
+    <div class="checkbox-group" style="background: #fff7ed;">
+        <label for="sign1"><strong>กดเจ็บท้องน้อยขวาล่าง (Right Lower Quadrant Tenderness) [2 คะแนน]</strong></label>
+        <input type="checkbox" id="sign1" value="2
