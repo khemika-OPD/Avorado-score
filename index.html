@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alvarado Score Calculator - รพ.ตาคลี</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&family=Kanit:wght@500;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@master/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body { font-family: 'Sarabun', sans-serif; background-color: #f0f4f8; margin: 0; padding: 15px; display: flex; justify-content: center; }
         .wrapper { max-width: 580px; width: 100%; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(13, 148, 136, 0.1); }
@@ -173,8 +173,8 @@ function calculateAlvarado() {
     }
 }
 
-// ฟังก์ชันสร้าง QR Code ที่มีการตรวจเช็กความปลอดภัย
-window.addEventListener('load', function() {
+// ผูกฟังก์ชันการเจน QR Code ด้วยสถาปัตยกรรมแบบดั้งเดิมที่ปลอดภัย
+window.onload = function() {
     try {
         var qrContainer = document.getElementById("qrcode");
         if (qrContainer) {
@@ -189,9 +189,9 @@ window.addEventListener('load', function() {
             });
         }
     } catch (e) {
-        console.log("QR Code generation skipped or delayed.");
+        console.log("QR Code error caught smoothly.");
     }
-});
+};
 </script>
 </body>
 </html>
